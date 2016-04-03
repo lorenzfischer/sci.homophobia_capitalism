@@ -53,9 +53,7 @@ questions_tax = questions_tax[! is.na(questions_tax$tax_rate),]
 questions_tax = setDT(questions_tax)
 aggregated = ddply(questions_tax, .(wave, country), numcolwise(median))
 
-ggplot(data=aggregated[aggregated$country %in% c("Mexico"),], aes(group=country, x=wave, y=homosexuality_justifiable)) + geom_line()
-
-plot_data = aggregated[aggregated$homosexuality_justifiable >= 0 & aggregated$tax_rate <= 100 ,] 
+plot_data = aggregated[aggregated$homosexuality_justifiable >= 0 ,] # & aggregated$tax_rate <= 100
 plt_ha_tax_agg = ggplot(plot_data, aes(homosexuality_justifiable, tax_rate)) +
   geom_point() +
   labs(title = "Homosexuality Acceptable vs. Tax Rate (by country/wave)") +
@@ -64,8 +62,7 @@ plot(plt_ha_tax_agg)
 hj_tr = plot_data[, c("homosexuality_justifiable", "tax_rate")]
 cor(hj_tr, method="pearson")
 
-#plt_ha_tax_raw = ggplot(questions_tax[questions_tax$homosexuality_justifiable >= 0,], aes(homosexuality_justifiable, tax_rate)) +
-#  geom_point() +
-#  labs(title = "Homosexuality Acceptable vs. Tax Rate")
-#plot(plt_ha_tax_raw)
+# just for fun, plot development of Mexico
+agg_notax = ddply(h_questions, .(wave, country), numcolwise(median))
+ggplot(data=agg_notax[agg_notax$country %in% c("Mexico", "Switzerland"),], aes(group=country, x=wave, y=homosexuality_justifiable)) + geom_line()
 
